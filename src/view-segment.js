@@ -20,8 +20,8 @@
 (function(angular) {
 
     angular.module( 'view-segment', [ 'route-segment' ] ).directive( 'appViewSegment',
-    ['$route', '$compile', '$controller', '$routeParams', '$routeSegment', '$q', '$injector',
-        function($route, $compile, $controller, $routeParams, $routeSegment, $q, $injector) {
+    ['$route', '$compile', '$controller', '$routeParams', '$routeSegment', '$q', '$injector', '$window',
+        function($route, $compile, $controller, $routeParams, $routeSegment, $q, $injector, $window) {
 
             return {
                 restrict : 'ECA',
@@ -103,6 +103,15 @@
                                 var link = $compile(currentElement, false, 499), controller;
 
                                 currentScope = $scope.$new();
+
+                                // add the scope of the parent segment to this segment's scope
+                                if (viewSegmentIndex > 0) {
+                                  var viewNode = $window.document.querySelector('[app-view-segment="' + (viewSegmentIndex - 1) + '"]');
+                                  if (angular.isDefined(viewNode)) {
+                                    currentScope.$parentSegmentScope = angular.element(viewNode).scope();
+                                  }
+                                }
+
                                 if (segment.params.controller) {
                                     locals.$scope = currentScope;
                                     controller = $controller(segment.params.controller, locals);
