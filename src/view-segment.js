@@ -97,7 +97,16 @@
                                 clearContent();
 
                                 currentElement = tElement.clone();
-                                currentElement.html(template);
+
+                                if (segment.params.modal) {
+                                  // if segment has modal flag, put modal dialog nodes around it
+                                  currentElement.addClass('modal');
+                                  currentElement.html('<div class="modal-dialog"><div class="modal-content"><div class="modal-body"></div><div class="modal-footer"><a class="btn btn-default" ng-href="/new/{{secondTopSegmentUrl}}">Schliessen</a></div></div></div>');
+                                  $('.modal-body', currentElement).html(template);
+                                } else {
+                                  currentElement.html(template);
+                                }
+
                                 animate.enter( currentElement, null, anchor );
 
                                 var link = $compile(currentElement, false, 499), controller;
